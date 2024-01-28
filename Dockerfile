@@ -1,4 +1,4 @@
-FROM python:3.11.5
+FROM python:3.11.5-slim
 
 # Install system dependencies
 RUN apt-get update && \
