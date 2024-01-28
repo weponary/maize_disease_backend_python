@@ -10,8 +10,9 @@ app = Flask(__name__)
 # Load the pre-trained model and class names
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
+load_options = tf.saved_model.LoadOptions(experimental_io_device='/job:localhost')
 
-loaded_model = tf.keras.models.load_model("/Users/soshaldahal/Documents/mazie_disease")
+loaded_model = tf.keras.models.load_model(current_dir)
 class_names = ['Corn___Common_Rust', 'Corn___Gray_Leaf_Spot', 'Corn___Healthy', 'Corn___Northern_Leaf_Blight']
 
 uploads_folder = "uploads"
