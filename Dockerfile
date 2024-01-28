@@ -1,5 +1,9 @@
 FROM python:3.11.5
 
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y libgl1-mesa-glx
+
 # Create and activate the virtual environment
 RUN python3 -m venv myenv
 ENV PATH="/app/myenv/bin:$PATH"
