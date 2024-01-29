@@ -1,9 +1,12 @@
-FROM python:3.11.5-slim
+FROM tensorflow/tensorflow:2.15.0
 
 # Install system dependencies
 RUN apt-get update && \
     apt-get install -y libgl1-mesa-glx && \
     apt-get install -y libglib2.0-0
+
+RUN pip install --no-cache-dir tensorflow==2.15.0
+
 
 
 # Disable GPU acceleration
