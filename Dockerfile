@@ -1,23 +1,27 @@
-FROM python:3.11.5
+# Use the official Python image from the Docker Hub
+FROM python:3.10-slim
 
+RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
+
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+# Set the working directory in the container
 WORKDIR /app
 
-# Install virtualenv
-RUN pip3 install virtualenv
-
-# Create a virtual environment
-RUN virtualenv venv
-
-# Activate the virtual environment and set as the default shell
-SHELL ["/bin/bash", "-c"]
-RUN source venv/bin/activate
+# Copy the requirements file into the container
+COPY requirements.txt .
 
 # Install dependencies
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the application code into the container
 COPY . .
 
-# Set the entry point to run the Flask app within the virtual environment
-CMD ["venv/bin/python", "-m", "flask", "run", "--host=0.0.0.0"]
+# Expose the port on which your Flask app will run
+EXPOSE 8000
+
+# Command to run the Flask application
+CMD ["python", "app.py"]
