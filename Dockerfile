@@ -1,26 +1,27 @@
-FROM python:3-alpine AS builder
- 
+FROM tensorflow/tensorflow:2.15.0
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y libgl1-mesa-glx && \
+    apt-get install -y libglib2.0-0
+
+RUN pip install --no-cache-dir tensorflow==2.15.0
+
+
+
+# Disable GPU acceleration
+ENV CUDA_VISIBLE_DEVICES -1
+
+# Create and activate the virtual environment
+RUN python3 -m venv myenv
+ENV PATH="/app/myenv/bin:$PATH"
+
 WORKDIR /app
- 
-RUN python3 -m venv venv
-ENV VIRTUAL_ENV=/app/venv
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
- 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
- 
-# Stage 2
-FROM python:3-alpine AS runner
- 
-WORKDIR /app
- 
-COPY --from=builder /app/venv venv
-COPY app.py app.py
- 
-ENV VIRTUAL_ENV=/app/venv
-ENV PATH="$VIRTUAL_ENV/bin:$PATH"
-ENV FLASK_APP=app/app.py
- 
-EXPOSE 8080
- 
-CMD ["gunicorn", "--bind" , ":8080", "--workers", "2", "app:app"]
+
+COPY requirements.txt requirements.txt
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+COPY . .
+
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0"]
+
