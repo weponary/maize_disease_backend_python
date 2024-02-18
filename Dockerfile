@@ -8,6 +8,9 @@ RUN apt-get update && apt-get install ffmpeg libsm6 libxext6  -y
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+# Disable GPU acceleration
+ENV CUDA_VISIBLE_DEVICES -1
+
 # Set the working directory in the container
 WORKDIR /app
 
